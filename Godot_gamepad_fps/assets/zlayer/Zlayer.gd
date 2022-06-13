@@ -12,8 +12,8 @@ var hor_l = 0;
 var ver_r = 0;
 var hor_r = 0;
 
-var sens = 2
-var speed = 15;
+var sens = 5
+var speed = 5;
 var jump = 10;
 var gravity = 6;
 
@@ -30,11 +30,7 @@ func _input(event):
 #		rotate_y(deg2rad(-event.relative.x * Mouse_sensitivity)) 
 #		head.rotate_x(deg2rad(-event.relative.y * Mouse_sensitivity)) 
 #		head.rotation.x = clamp(head.rotation.x, deg2rad(-90), deg2rad(90))
-	
-	rotate_y(deg2rad(hor_r * sens * -1)) 
-	head.rotate_x(deg2rad(ver_r * sens)) 
-	head.rotation.x = clamp(head.rotation.x, deg2rad(-90), deg2rad(90))
-	
+	pass
 
 func _physics_process(delta):
 	direction = Vector3()
@@ -44,16 +40,16 @@ func _physics_process(delta):
 		fall.y -= gravity
 
 	if ver_l < 0:
-		direction -= transform.basis.z * ver_l
-		print(direction)
+		direction -= transform.basis.z * ver_l * 0.5
+		print(ver_l)
 	if ver_l > 0:
-		direction += transform.basis.z * ver_l * -1
-		print(direction)
+		direction += transform.basis.z * ver_l * -1 * 0.5
+		print(hor_l)
 		
 	if hor_l < 0:
-		direction -= transform.basis.x * hor_l * -1
+		direction -= transform.basis.x * hor_l * -1 * 0.5
 	elif hor_l > 0:
-		direction += transform.basis.x * hor_l
+		direction += transform.basis.x * hor_l * 0.5
 		
 	direction = direction.normalized()
 	velocity = velocity.linear_interpolate(direction * speed, 10 * delta) 
@@ -67,6 +63,9 @@ func _process(delta):
 	hor_r = Input.get_action_strength("cam_right") - Input.get_action_strength("cam_left")
 	ver_r = Input.get_action_strength("cam_up") - Input.get_action_strength("cam_down")
 	
+	rotate_y(deg2rad(hor_r * sens * -1)) 
+	head.rotate_x(deg2rad(ver_r * sens)) 
+	head.rotation.x = clamp(head.rotation.x, deg2rad(-90), deg2rad(90))
 	
 	if Input.is_action_just_pressed("back"):
 		get_tree().quit()
